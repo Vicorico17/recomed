@@ -35,6 +35,17 @@ Nu este o platformă de diagnostic, telemedicină sau „lead generation” plă
 
 Rezultatele de căutare și eticheta „recomandat” trebuie să rămână independente de plata clinicii. Un profil sponsorizat, dacă va exista, trebuie marcat clar și nu trebuie să influențeze recomandarea.
 
+## Extensie de produs: Recomed Clinical Tools
+
+Pe lângă discovery și referral, produsul poate deveni un workspace B2B pentru clinici și medici:
+
+- **Reader pentru investigații și rapoarte:** extrage termeni și structurează informația pentru revizuire clinică, cu clinician-in-the-loop; nu pune diagnostic și nu înlocuiește medicul.
+- **Handoff/referral workspace:** context minim, permisiuni pe roluri, audit trail și link privat pentru pacient.
+- **Feedback operațional:** feedback verificat după vizită, separat de evaluarea rezultatului clinic.
+- **Monetizare:** abonament per clinică/locație, plan premium per utilizator și enterprise/API pentru SSO, EHR/PACS și retenție configurabilă.
+
+Aceste instrumente trebuie lansate numai după threat modeling, minimizarea datelor, criptare, control de acces, audit logs, politici de retenție, BAA-uri unde se aplică și evaluare juridică/independentă. Pagina publică folosește formularea „HIPAA-compliant este standardul de lansare”, nu pretinde că MVP-ul actual este certificat sau deja conform.
+
 ## Garduri de siguranță (obligatorii înainte de lansare)
 
 - Codul de deontologie medicală limitează publicitatea la scop informativ, interzice avantajele materiale pentru atragerea pacienților și exclude afirmațiile înșelătoare, comparative sau care garantează rezultate. Recomed nu oferă recompense pentru alegerea unui anumit medic și nu folosește „cel mai bun” / „garantat”.
