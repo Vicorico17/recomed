@@ -1,0 +1,63 @@
+const assert = require('node:assert/strict');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+(async () => {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('http://127.0.0.1:4189');
+    assert.equal(await page.locator('html').getAttribute('lang'), 'ro');
+    for (const link of await page.locator('a[href^="#"]').all()) assert.equal(await page.locator(await link.getAttribute('href')).count(), 1);
+    await page.locator('#specialty').selectOption('cardiologie');
+    assert.equal(await page.locator('#demo-name').textContent(), 'Dr. Radu Marinescu');
+    await page.locator('#specialty').selectOption('ortopedie');
+    assert.equal(await page.locator('#demo-name').textContent(), 'Dr. Elena Dumitrescu');
+    await page.locator('.next-step summary').click();
+    assert.equal(await page.locator('.next-step').getAttribute('open'), '');
+    await page.locator('#pilot-form button').click();
+    assert.equal(await page.locator('#email-result').isVisible(), false);
+    await page.locator('#name').fill('   ');
+    await page.locator('#email').fill('test@example.com');
+    await page.locator('#pilot-form button').click();
+    assert.equal(await page.locator('#email-result').isVisible(), false);
+    await page.locator('#name').fill('Ana & Ștefan');
+    await page.locator('#role').selectOption('Pacient interesat de lansare');
+    await page.locator('#pilot-form button').click();
+    assert.equal(await page.locator('#email-result').isVisible(), true);
+    const email = new URL(await page.locator('#email-link').getAttribute('href'));
+    assert.equal(email.pathname, 'hello@recomed.health');
+    assert.match(email.searchParams.get('body'), /Ana & Ștefan/);
+    assert.match(email.searchParams.get('subject'), /lansarea/);
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'email-link');
+    await page.locator('#name').fill('Ana');
+    assert.equal(await page.locator('#email-result').isVisible(), false);
+    await page.locator('#pilot-form button').click();
+    await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText: async () => { throw new Error('Denied'); } }, configurable: true }));
+    await page.locator('#copy-message').click();
+    assert.match(await page.locator('#copy-status').textContent(), /manual/);
+    for (const width of [1440, 1024, 768, 760, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Overflow at ${width}px`);
+    }
+    await page.locator('.menu-toggle').click();
+    assert.equal(await page.locator('#nav-links').isVisible(), true);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#nav-links').isVisible(), false);
+    await page.locator('.menu-toggle').click();
+    await page.locator('#nav-links a[href="#medici"]').click();
+    assert.equal(await page.locator('#nav-links').isVisible(), false);
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto('http://127.0.0.1:4189');
+    await page.screenshot({ path: '/tmp/recomed-desktop.png', fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.screenshot({ path: '/tmp/recomed-mobile.png', fullPage: true });
+    assert.deepEqual(errors, []);
+    const fallback = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+    await fallback.goto('http://127.0.0.1:4189');
+    assert.equal(await fallback.locator('#nav-links').isVisible(), true);
+    assert.equal(await fallback.locator('#specialty').isDisabled(), true);
+    assert.equal(await fallback.locator('.direct-contact a').isVisible(), true);
+    console.log('PASS: demo, anchor targets, validation, encoded email, stale draft clearing, clipboard fallback, mobile navigation, six viewport widths, no-JS fallback, and no JS errors.');
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });

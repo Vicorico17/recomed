@@ -1,5 +1,7 @@
 # Recomed — direcție de business (România)
 
+> Document istoric de explorare. Pagina actuală prezintă un prototip de recomandări între medici, cu exemple fictive și contact prin email. Funcționalitățile, estimările și referințele de mai jos necesită validare înainte de implementare; nu descriu servicii disponibile sau conformitate verificată.
+
 ## Problema
 
 Pentru mulți români, alegerea unui medic începe informal: întrebi prieteni, familie sau grupuri locale. Rezultatul este util, dar greu de comparat, neverificabil și se pierde în conversații. Platformele existente rezolvă în principal căutarea și programarea; Recomed poate transforma recomandarea de încredere într-un produs clar, verificabil și util.
@@ -44,7 +46,7 @@ Pe lângă discovery și referral, produsul poate deveni un workspace B2B pentru
 - **Feedback operațional:** feedback verificat după vizită, separat de evaluarea rezultatului clinic.
 - **Monetizare:** abonament per clinică/locație, plan premium per utilizator și enterprise/API pentru SSO, EHR/PACS și retenție configurabilă.
 
-Aceste instrumente trebuie lansate numai după threat modeling, minimizarea datelor, criptare, control de acces, audit logs, politici de retenție, BAA-uri unde se aplică și evaluare juridică/independentă. Pagina publică folosește formularea „HIPAA-compliant este standardul de lansare”, nu pretinde că MVP-ul actual este certificat sau deja conform.
+Aceste instrumente trebuie evaluate înainte de lansare, inclusiv din perspectiva securității, minimizării datelor și obligațiilor aplicabile. Pagina publică actuală nu afirmă conformitate sau certificare HIPAA/GDPR; demonstrația nu procesează documente clinice.
 
 ## Garduri de siguranță (obligatorii înainte de lansare)
 
